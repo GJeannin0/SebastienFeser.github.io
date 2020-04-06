@@ -55,7 +55,7 @@ Structure of arrays is a layout separating elements of a structure into one para
 
 This is how I decided to implement my AoSoA
 
-![](https://github.com/SebastienFeser/SebastienFeser.github.io/blob/master/FourQuaternionsAoSoA.png)
+![](https://github.com/SebastienFeser/SebastienFeser.github.io/FourQuaternionsAoSoA.png)
 
 The *FourQuaternion* structure looks like this:
 

@@ -77,7 +77,9 @@ I've decided to approach the problem by creating a AoSoA system.
 
 To stock the values of my *FourQuaternions*, I decided to use Array of Structure of arrays.
 <!--- explain more about AoS SoA and AoSoA --->
-Structure of arrays is a layout separating elements of a structure into one parallel array per field. It will allow me here easier manipulation with the packed SIMD instructions I’ll be using. So it’s necessary I create those first.
+Structure of arrays is a layout separating elements of a structure into one parallel array per field. It makes it easier to use them by packing them into SIMD instructions. So it’s necessary I create those first.
+
+![](https://github.com/SebastienFeser/SebastienFeser.github.io/blob/master/ScalarVsSIMD.png)
 
 The reason why structures of arrays are better here is because the values will be aligned in code so it's much faster to load all values from memory in one block instead of going for each values and then aligning them.
 
@@ -90,7 +92,7 @@ So combining these two values, it creates an Array of Structures of Array.
 
 This is how I decided to implement my AoSoA:
 
-![](https://github.com/SebastienFeser/SebastienFeser.github.io/FourQuaternionsAoSoA.png)
+![](https://github.com/SebastienFeser/SebastienFeser.github.io/blob/master/FourQuaternionsAoSoA.png)
 
 ## Intel Intrinsics
 To do the functions with these array, I’ll have to use the Intel intrinsic instructions, which are C style functions that provide access to many Intel instructions without the need to write assembly code. 

@@ -48,15 +48,6 @@ To optimise my code, I decided to create a new Struct called *FourQuaternion*. T
 
 Why am I doing that? Because instead of doing the calculus 4 times with a different *Quaternion*, I’ll be doing it only once by aligning each values of the Quaternions.
 
-## Array of Structures of Arrays
-To stock the values of my *FourQuaternions*, I decided to use Array of Structure of arrays.
-<!--- explain more about AoS SoA and AoSoA --->
-Structure of arrays is a layout separating elements of a structure into one parallel array per field. It will allow me here easier manipulation with the packed SIMD instructions I’ll be using. So it’s necessary I create those first.
-
-This is how I decided to implement my AoSoA
-
-![](https://github.com/SebastienFeser/SebastienFeser.github.io/FourQuaternionsAoSoA.png)
-
 The *FourQuaternion* structure looks like this:
 
 ```cpp
@@ -71,6 +62,26 @@ struct FourQuaternion
 <!--- Show in code the implementation --->
 
 It contains an array of 4 *floats* for each values in the *FourQuaternion*.
+
+## Array of Structures of Arrays
+I've decided to approach the problem by creating a AoSoA system.
+
+To stock the values of my *FourQuaternions*, I decided to use Array of Structure of arrays.
+<!--- explain more about AoS SoA and AoSoA --->
+Structure of arrays is a layout separating elements of a structure into one parallel array per field. It will allow me here easier manipulation with the packed SIMD instructions I’ll be using. So it’s necessary I create those first.
+
+The reason why structures of arrays are better here is because the values will be aligned in code so it's much faster to load all values from memory in one block instead of going for each values and then aligning them.
+
+- **Aos Alignement:** xyzwxyzwxyzwxyzw
+- **SoA Alignment:** xxxxyyyyzzzzwwww
+
+Every FourQuaternions will be stocked in an Array in the code, this is then an Array of Structures.
+
+So combining these two values, it creates an Array of Structures of Array.
+
+This is how I decided to implement my AoSoA:
+
+![](https://github.com/SebastienFeser/SebastienFeser.github.io/FourQuaternionsAoSoA.png)
 
 ## Intel Intrinsics
 To do the functions with these array, I’ll have to use the Intel intrinsic instructions, which are C style functions that provide access to many Intel instructions without the need to write assembly code. 

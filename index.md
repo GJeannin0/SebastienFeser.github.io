@@ -127,15 +127,17 @@ static inline std::array<float, 4> Dot(FourQuaternion q1, FourQuaternion q2)
 <!--- Show in code the implementation --->
 
 Let me explain what the Intel Intrinsics function do:
+### ps
+ps means packed single_precision floating-points. It basically means 4 * 32 bit floating point numbers stored as a 128-bit value.
 
 ### _mm_load_ps()
 The **_mm_load_ps** function is loading from memory the values contained in the array. The values must be 16 bytes which correspond to an *array* of 4 *float* numbers, and they must be aligned in memory, that’s why we’re using arrays that align the *floats* in memory.
 
 ### _mm_mul_ps()
-The  **_mm_mul_ps** function is multiplying two values together
+The  **_mm_mul_ps** function is multiplying 4 *floats* with 4 other *floats*.
 
 ### _mm_add_ps()
-The **_mm_add_ps** function is adding two values together
+The **_mm_add_ps** function is adding two values together.
 
 ### _mm_store_ps()
 The **_mm_store_ps** function is storing from the value *x1* to the memory.
@@ -143,7 +145,7 @@ The **_mm_store_ps** function is storing from the value *x1* to the memory.
 Here, instead of calculating the functions 4 times with 4 different Quaternions, I’ll be calculating them only once. This will allow to spare a lot of performance as I will show you.
 
 ## Performances
-I created a test that calculated the **Dot product** of *n* quaternions. Here’s the result:
+I created a test that calculated the **Dot product** of *n* quaternions using the MSVC compiler with a intel core i7 CPU on a windows 10 PC. Here’s the result:
 
 <!--- Show a graphic of the code --->
 

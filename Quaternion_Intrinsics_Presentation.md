@@ -31,10 +31,14 @@ To optimise my code, I decided to create a new Struct called *FourQuaternion*. T
 
 Why am I doing that? Because instead of doing the calculus 4 times with a different *Quaternion*, I’ll be doing it only once by aligning each values of the Quaternions.
 
-## Structure of Arrays
-To stock the values of my *FourQuaternions*, I decided to use Structure of arrays.
-
+## Array of Structures of Arrays
+To stock the values of my *FourQuaternions*, I decided to use Array of Structure of arrays.
+<!--- explain more about AoS SoA and AoSoA --->
 Structure of arrays is a layout separating elements of a structure into one parallel array per field. It will allow me here easier manipulation with the packed SIMD instructions I’ll be using. So it’s necessary I create those first.
+
+This is how I decided to implement my AoSoA
+
+![](https://github.com/SebastienFeser/SebastienFeser.github.io/blob/master/FourQuaternionsAoSoA.png)
 
 The *FourQuaternion* structure looks like this:
 

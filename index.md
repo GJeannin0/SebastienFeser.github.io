@@ -3,6 +3,15 @@ I’ve been working on the optimisation of Quaternions for the Neko Game Engine 
 
 Quaternions are used to represent rotations. They’re based on complex numbers and aren’t easy to understand intuitively. You almost never access or modify individual Quaternion components. You’d just take existing rotation like the one in the transform and use them to construct new rotations. One of the main reason we’re using Quaternions is to avoid gimbal lock which is the loss of one degree of freedom in a rotation.
 
+**3 Axes Gimbal Rotation**
+
+![](https://upload.wikimedia.org/wikipedia/commons/5/5a/Gimbal_3_axes_rotation.gif)
+
+**Gimball Lock**
+
+![](https://upload.wikimedia.org/wikipedia/commons/4/49/Gimbal_Lock_Plane.gif)
+
+
 <!--- Show a picture illustrating quaternions and rotations --->
 
 My task was to optimise their use as much as I could so I decided to optimise them by working with the Intel Intrinsics functions.

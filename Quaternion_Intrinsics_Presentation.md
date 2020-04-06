@@ -12,6 +12,16 @@ Let’s have a look
 ## Quaternion
 The basic implementation of the Quaternions looks like this:
 
+```cpp
+struct Quaternion
+{
+  float x;        //4 bytes
+  float y;        //4 bytes
+  float z;        //4 bytes
+  float w;        //4 bytes
+};
+```
+
 <!--- Show in code the implementation --->
 
 The *Quaternion* contains 4 *floats* representing every values.
@@ -19,8 +29,15 @@ The *Quaternion* contains 4 *floats* representing every values.
 For the optimization I implemented, I decided to take the **Dot** function that calculates the Dot Product of 2 *Quaternions*, as a reference to test if it was working or not.
 
 So here’s how the **Dot** function of my *Quaternion* struct looks like:
-
-<!--- Show in code the implementation --->
+```cpp
+static float Dot(Quaternion a, Quaternion b)
+{
+  return  a.x * b.x +
+          a.y * b.y +
+          a.z * b.z +
+          a.w * b.w;
+}
+```
 
 The **Dot** function takes each value of the *Quaternion a* and the *Quaternion b* to calculate the Dot product and it returns a *float*.
 
@@ -42,6 +59,15 @@ This is how I decided to implement my AoSoA
 
 The *FourQuaternion* structure looks like this:
 
+```cpp
+struct FourQuaternion
+{
+  std::array<float, 4> x;       //16 bytes
+  std::array<float, 4> y;       //16 bytes
+  std::array<float, 4> z;       //16 bytes
+  std::array<float, 4> w;       //16 bytes
+};
+```
 <!--- Show in code the implementation --->
 
 It contains an array of 4 *floats* for each values in the *FourQuaternion*.
@@ -50,7 +76,32 @@ It contains an array of 4 *floats* for each values in the *FourQuaternion*.
 To do the functions with these array, I’ll have to use the Intel intrinsic instructions, which are C style functions that provide access to many Intel instructions without the need to write assembly code. 
 
 Since I decided to use the **Dot** function as a test, let’s look how it looks like in the *FourQuaternion*:
+```cpp
+static inline std::array<float, 4> Dot(FourQuaternion q1, FourQuaternion q2)
+	{
+		alignas(4 * sizeof(float)) std::array<float, 4> result;
+		auto x1 = _mm_load_ps(q1.x.data());
+		auto y1 = _mm_load_ps(q1.y.data());
+		auto z1 = _mm_load_ps(q1.z.data());
+		auto w1 = _mm_load_ps(q1.w.data());
 
+		auto x2 = _mm_load_ps(q2.x.data());
+		auto y2 = _mm_load_ps(q2.y.data());
+		auto z2 = _mm_load_ps(q2.z.data());
+		auto w2 = _mm_load_ps(q2.w.data());
+
+		x1 = _mm_mul_ps(x1, x2);
+		y1 = _mm_mul_ps(y1, y2);
+		z1 = _mm_mul_ps(z1, z2);
+		w1 = _mm_mul_ps(w1, w2);
+
+		x1 = _mm_add_ps(x1, y1);
+		z1 = _mm_add_ps(z1, w1);
+		x1 = _mm_add_ps(x1, z1);
+		_mm_store_ps(result.data(), x1);
+		return result;
+	}
+```
 <!--- Show in code the implementation --->
 
 Let me explain what the Intel Intrinsics function do:

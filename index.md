@@ -85,6 +85,8 @@ To optimise my code, I decided to create a new Struct called *FourQuaternion*. T
 
 Why am I doing that? Because instead of doing the calculus 4 times with a different *Quaternion*, I’ll be doing it only once by aligning each values of the Quaternions.
 
+Why 4 floats then? Because 4 floats uses 4 bytes each and an xmm register can contain 16 bytes.
+
 The *FourQuaternion* structure looks like this:
 
 ```cpp

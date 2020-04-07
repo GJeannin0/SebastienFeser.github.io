@@ -1,5 +1,7 @@
 # Quaternions Intrinsics Optimisation
-I’ve been working on the optimization of Quaternions for the Neko Game Engine we’re currently working on.
+I'm currently a student at the SAE Institute of Geneva school in the Games Programming section. We're currently working on a Game Engine and we had to work by team of two people on the implementation of basic things for the Game Engine.
+
+Here, I am going to present you an optimization I implemented by myself on the current Engine.
 
 Quaternions are used to represent rotations. They’re based on complex numbers and aren’t easy to understand intuitively. You rarely access or modify individual Quaternion components. You’d just take existing rotation like the one in the transform and use them to construct new rotations. One of the main reasons we’re using Quaternions is to avoid gimbal lock which is the loss of one degree of freedom in a rotation.
 
@@ -160,4 +162,9 @@ It was the first time for me to do that kind of exercise to optimize the most I 
 It was the first time I worked with AoSoAs and with the Intel Intrinsics functions. It was really interesting to know what was going with the compiler and what it was doing to try to optimize the code I was writing, and knowing that he couldn't guess everything.
 
 I hope you had fun reading my Blogpost and that you learned something out of it :)
+
+## Useful links
+**Vizualizing quaternions:** https://eater.net/quaternions
+**Quaternion and FourQuaternion on Godbolt:** https://godbolt.org/z/SHBEmn 
+
 <!--- Conclusion --->

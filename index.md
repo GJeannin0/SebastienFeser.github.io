@@ -1,7 +1,7 @@
 # Quaternions Intrinsics Optimisation
-I'm currently a student at the SAE Institute of Geneva school in the Games Programming section. We're currently working on a Game Engine and we had to work by team of two people on the implementation of basic things for the Game Engine.
+I'm currently a student at the SAE Institute of Geneva school in the Games Programming section. We're currently working on a Game Engine and we had to work by a team of two people on the implementation of basic things for the Game Engine.
 
-Here, I am going to present you an optimization I implemented by myself on the current Engine.
+Here, I am going to present to you an optimization I implemented by myself on the current Engine.
 
 Quaternions are used to represent rotations. They’re based on complex numbers and aren’t easy to understand intuitively. You rarely access or modify individual Quaternion components. You’d just take existing rotation like the one in the transform and use them to construct new rotations. One of the main reasons we’re using Quaternions is to avoid gimbal lock which is the loss of one degree of freedom in a rotation.
 
@@ -59,7 +59,7 @@ To optimize my code, I decided to create a new Struct called *FourQuaternion*. T
 
 Why am I doing that? Because instead of doing the calculus 4 times with a different *Quaternion*, I’ll be doing it only once by aligning each values of the Quaternions.
 
-Why 4 floats then? Because 4 floats uses 4 bytes each and an xmm register can contain 16 bytes.
+Why 4 floats then? Because 4 floats use 4 bytes each and an xmm register can contain 16 bytes.
 
 The *FourQuaternion* structure looks like this:
 
@@ -79,9 +79,9 @@ It contains an array of 4 *floats* for each values in the *FourQuaternion*.
 ## Array of Structures of Arrays
 I've decided to approach the problem by creating an AoSoA system.
 
-To stock the values of my *FourQuaternions*, I decided to use Array of Structure of arrays.
+To stock the values of my *FourQuaternions*, I decided to use an "Array of Structure of rrays".
 <!--- explain more about AoS SoA and AoSoA --->
-Structure of arrays is a layout separating elements of a structure into one parallel array per field. It makes it easier to use them by packing them into SIMD instructions. So I must create those first.
+"Structure of Arrays" is a layout separating elements of a structure into one parallel array per field. It makes it easier to use them by packing them into SIMD instructions. So I must create those first.
 
 ![](ScalarVsSIMD.png)
 
@@ -158,7 +158,7 @@ As you can see, the **BM_Dot_Intrinsics** is between 3 and 4 times faster than t
 
 I've looked on godbolt what was the main difference between the two functions in assembly code.
 
-The Quaternion **Dot** function had to use a **jmp** to test the Dot product of 4 Quaternions. It calculated for each values the Dot product.
+The Quaternion **Dot** function had to use a **jmp** to test the Dot product of 4 Quaternions. It calculated for each value the Dot product.
 
 The FourQuaternion **Dot** function had no jump. Where the Quaternion **Dot** had to use **movss** (32-bit memory location) and **movsxd** functions, the FourQuaternion **Dot** is using **movaps** (128-bit memory location) and **movups** functions. This shows us that we achieved to use the Intel Intrinsics functions correctly.
 
@@ -170,7 +170,7 @@ It was the first time I worked with AoSoAs and with the Intel Intrinsics functio
 I hope you had fun reading my Blogpost and that you learned something out of it :)
 
 ## Useful links
-**Vizualizing quaternions:** https://eater.net/quaternions
+**Visualizing quaternions:** https://eater.net/quaternions
 
 **Quaternion and FourQuaternion on Godbolt:** https://godbolt.org/z/SHBEmn 
 

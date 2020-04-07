@@ -3,7 +3,7 @@ I'm currently a student at the SAE Institute of Geneva school in the Games Progr
 
 Here, I am going to present to you an optimization I implemented by myself on the current Engine.
 
-Quaternions are used to represent rotations. They’re based on complex numbers and aren’t easy to understand intuitively. You rarely access or modify individual Quaternion components. You’d just take existing rotation like the one in the transform and use them to construct new rotations. One of the main reasons we’re using Quaternions is to avoid gimbal lock which is the loss of one degree of freedom in a rotation.
+Quaternions are used to represent rotations. They’re based on complex numbers and aren’t easy to understand intuitively. You rarely access or modify individual Quaternion components. You’d just take existing rotations like the one in the transform and use them to construct new rotations. One of the main reasons we’re using Quaternions is to avoid gimbal lock which is the loss of one degree of freedom in a rotation.
 
 **3 Axes Gimbal Rotation**
 
@@ -79,9 +79,9 @@ It contains an array of 4 *floats* for each values in the *FourQuaternion*.
 ## Array of Structures of Arrays
 I've decided to approach the problem by creating an AoSoA system.
 
-To stock the values of my *FourQuaternions*, I decided to use an "Array of Structures of Arrays".
+To stock the values of my *FourQuaternions*, I decided to use an Array of Structures of Arrays.
 <!--- explain more about AoS SoA and AoSoA --->
-"Structure of Arrays" is a layout separating elements of a structure into one parallel array per field. It makes it easier to use them by packing them into SIMD instructions. So I must create those first.
+Structures of Arrays are a layout separating elements of a structure into one parallel array per field. It makes it easier to use them by packing them into SIMD instructions. So I must create those first.
 
 ![](ScalarVsSIMD.png)
 
@@ -90,18 +90,16 @@ The reason why structures of arrays are better here is because the values will b
 - **Aos Alignment:** xyzwxyzwxyzwxyzw
 - **SoA Alignment:** xxxxyyyyzzzzwwww
 
-Every FourQuaternions will be stocked in an Array in the code, this is then an Array of Structures.
+Every FourQuaternion will be stocked in an Array in the code, this is then an Array of Structures.
 
 So combining these two values, it creates an Array of Structures of Array.
-
-This is how I decided to implement my AoSoA:
 
 ![](FourQuaternionsAoSoA.png)
 
 ## Intel Intrinsics
-To do the functions with these arrays, I’ll have to use the Intel intrinsic instructions, which are C style functions that provide access to many Intel instructions without the need to write assembly code. 
+To do the functions with these arrays, I’ll have to use the Intel Intrinsic instructions, which are C style functions that provide access to many Intel instructions without the need to write assembly code. 
 
-Since I decided to use the **Dot** function as a test, let’s look at how it looks like in the *FourQuaternion*:
+Since I decided to use the **Dot** function as a test, let’s look at how it looks like in the *FourQuaternion* Struct:
 ```cpp
 static inline std::array<float, 4> Dot(FourQuaternion q1, FourQuaternion q2)
 	{
@@ -130,7 +128,7 @@ static inline std::array<float, 4> Dot(FourQuaternion q1, FourQuaternion q2)
 ```
 <!--- Show in code the implementation --->
 
-Let me explain what the Intel Intrinsics function do:
+Let me explain what the Intel Intrinsics functions do:
 ### ps
 ps means packed single_precision floating-points. It basically means 4 * 32 bit floating point numbers stored as a 128-bit value.
 
@@ -146,17 +144,17 @@ The **_mm_add_ps** function is adding two values together.
 ### _mm_store_ps()
 The **_mm_store_ps** function is storing from the value *x1* to the memory.
 
-Here, instead of calculating the functions 4 times with 4 different Quaternions, I’ll be calculating them only once. This will allow to spare a lot of performance as I will show you.
+Here, instead of calculating the **Dot** function 4 times with 4 different Quaternions, I’ll be calculating it only once. This will allow to spare a lot of performance as I will show you.
 
 ## Results
-I created a test that calculated the **Dot product** of *n* quaternions using the MSVC compiler with an intel core i7 CPU on a Windows 10 PC. Here’s the result:
+I created a test that calculates the **Dot product** of *n* Quaternions using the MSVC Compiler with an Intel core i7 CPU on a Windows 10 PC. Here’s the result:
 
 <!--- Show a graphic of the code --->
 ![](ResultQuatIntrinsicsGraph.png)
 
 As you can see, the **BM_Dot_Intrinsics** is between 3 and 4 times faster than the **BM_Dot** which is a huge performance optimization.
 
-I've looked on godbolt what was the main difference between the two functions in assembly code.
+I've looked on Godbolt what was the main difference between the two functions in assembly code.
 
 The Quaternion **Dot** function had to use a **jmp** to test the Dot product of 4 Quaternions. It calculated for each value the Dot product.
 

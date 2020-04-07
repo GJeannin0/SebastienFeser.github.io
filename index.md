@@ -148,13 +148,19 @@ The **_mm_store_ps** function is storing from the value *x1* to the memory.
 
 Here, instead of calculating the functions 4 times with 4 different Quaternions, I’ll be calculating them only once. This will allow to spare a lot of performance as I will show you.
 
-## Performances
+## Results
 I created a test that calculated the **Dot product** of *n* quaternions using the MSVC compiler with an intel core i7 CPU on a Windows 10 PC. Here’s the result:
 
 <!--- Show a graphic of the code --->
 ![](ResultQuatIntrinsicsGraph.png)
 
 As you can see, the **BM_Dot_Intrinsics** is between 3 and 4 times faster than the **BM_Dot** which is a huge performance optimization.
+
+I've looked on godbolt what was the main difference between the two functions in assembly code.
+
+The Quaternion **Dot** function had to use a **jmp** to test the Dot product of 4 Quaternions. It calculated for each values the Dot product.
+
+The FourQuaternion **Dot** function had no jump. Where the Quaternion **Dot** had to use **movss** (32-bit memory location) and **movsxd** functions, the FourQuaternion **Dot** is using **movaps** (128-bit memory location) and **movups** functions. This shows us that we achieved to use the Intel Intrinsics functions correctly.
 
 ## Lessons Learned
 It was the first time for me to do that kind of exercise to optimize the most I could the code I implemented.
@@ -165,6 +171,8 @@ I hope you had fun reading my Blogpost and that you learned something out of it 
 
 ## Useful links
 **Vizualizing quaternions:** https://eater.net/quaternions
+
 **Quaternion and FourQuaternion on Godbolt:** https://godbolt.org/z/SHBEmn 
+
 
 <!--- Conclusion --->

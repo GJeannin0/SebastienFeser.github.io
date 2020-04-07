@@ -47,6 +47,34 @@ static float Dot(Quaternion a, Quaternion b)
           a.w * b.w;
 }
 ```
+This is how the x64 msvc v19.24 compiler compiles the Dot product code in assembly:
+```Assembly
+float Dot(Quaternion,Quaternion) PROC                      ; Dot
+        mov     QWORD PTR [rsp+16], rdx
+        mov     QWORD PTR [rsp+8], rcx
+        mov     rax, QWORD PTR a$[rsp]
+        mov     rcx, QWORD PTR b$[rsp]
+        movss   xmm0, DWORD PTR [rax]
+        mulss   xmm0, DWORD PTR [rcx]
+        mov     rax, QWORD PTR a$[rsp]
+        mov     rcx, QWORD PTR b$[rsp]
+        movss   xmm1, DWORD PTR [rax+4]
+        mulss   xmm1, DWORD PTR [rcx+4]
+        addss   xmm0, xmm1
+        mov     rax, QWORD PTR a$[rsp]
+        mov     rcx, QWORD PTR b$[rsp]
+        movss   xmm1, DWORD PTR [rax+8]
+        mulss   xmm1, DWORD PTR [rcx+8]
+        addss   xmm0, xmm1
+        mov     rax, QWORD PTR a$[rsp]
+        mov     rcx, QWORD PTR b$[rsp]
+        movss   xmm1, DWORD PTR [rax+12]
+        mulss   xmm1, DWORD PTR [rcx+12]
+        addss   xmm0, xmm1
+        ret     0
+float Dot(Quaternion,Quaternion) ENDP                      ; Dot
+```
+It first adds each values of the Quaternions, then multiply a.x and b.x and after a.y and b.y and then add them. After that he does the exact same with a.z, b.z, a.w and b.w. Finally he add the two values together so we have our Dot product result.
 
 The **Dot** function takes each value of the *Quaternion a* and the *Quaternion b* to calculate the Dot product and it returns a *float*.
 

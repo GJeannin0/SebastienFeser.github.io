@@ -79,7 +79,7 @@ It contains an array of 4 *floats* for each values in the *FourQuaternion*.
 ## Array of Structures of Arrays
 I've decided to approach the problem by creating an AoSoA system.
 
-To stock the values of my *FourQuaternions*, I decided to use an "Array of Structure of rrays".
+To stock the values of my *FourQuaternions*, I decided to use an "Array of Structures of Arrays".
 <!--- explain more about AoS SoA and AoSoA --->
 "Structure of Arrays" is a layout separating elements of a structure into one parallel array per field. It makes it easier to use them by packing them into SIMD instructions. So I must create those first.
 
